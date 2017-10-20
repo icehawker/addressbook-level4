@@ -22,6 +22,7 @@ public interface ReadOnlyPerson {
     Address getAddress();
     ObjectProperty<UniqueTagList> tagProperty();
     Set<Tag> getTags();
+    ObjectProperty<Country> countryProperty();
 
     /**
      * Returns true if both have the same state. (interfaces cannot override .equals)
