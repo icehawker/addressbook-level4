@@ -14,6 +14,7 @@ public class Phone {
     public static final String MESSAGE_PHONE_CONSTRAINTS =
             "Phone numbers can only contain numbers, and should be at least 4 digits long";
     private static final String PHONE_VALIDATION_REGEX = "\\d{4,}";
+    private static final String PHONE_VALIDATION_REGEX_ALT = "^\\+(?:[0-9] ?){6,14}[0-9]$";
     public final String value;
 
     /**
@@ -34,7 +35,7 @@ public class Phone {
      * Returns true if a given string is a valid person phone number.
      */
     public static boolean isValidPhone(String test) {
-        return test.matches(PHONE_VALIDATION_REGEX);
+        return test.matches(PHONE_VALIDATION_REGEX) || test.matches(PHONE_VALIDATION_REGEX_ALT);
     }
 
     @Override
