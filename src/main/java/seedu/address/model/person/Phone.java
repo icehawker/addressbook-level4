@@ -2,6 +2,9 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import seedu.address.commons.exceptions.IllegalValueException;
 
 /**
@@ -16,6 +19,8 @@ public class Phone {
     private static final String PHONE_VALIDATION_REGEX = "\\d{4,}";
     private static final String PHONE_VALIDATION_REGEX_ALT = "^\\+(?:[0-9] ?){6,14}[0-9]$";
     public final String value;
+    private String countryCode;
+    public static final String defaultCountryCode = "65"; // to be transferred to a separate command
 
     /**
      * Validates given phone number.
@@ -29,6 +34,22 @@ public class Phone {
             throw new IllegalValueException(MESSAGE_PHONE_CONSTRAINTS);
         }
         this.value = trimmedPhone;
+        this.countryCode = trimCode(trimmedPhone);
+    }
+
+    public static String trimCode(String trimmedPhone) {
+        if (trimmedPhone.matches(PHONE_VALIDATION_REGEX_ALT)) {
+            // take pattern: start w/ '+', end with whitespace
+            Pattern pattern = Pattern.compile("^\\+(.*?)\\s");
+            Matcher matcher = pattern.matcher(trimmedPhone);
+            return matcher.group(1);
+        } else {
+            return defaultCountryCode;
+        }
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 
     /**
