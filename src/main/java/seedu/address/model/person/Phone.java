@@ -13,14 +13,15 @@ import seedu.address.commons.exceptions.IllegalValueException;
  */
 public class Phone {
 
-
+    public static final String DEFAULT_COUNTRY_CODE = "65"; // to be transferred to a separate command
+    public static final String DEFAULT_COUNTRY = "Singapore";
     public static final String MESSAGE_PHONE_CONSTRAINTS =
             "Phone numbers can only contain numbers, and should be at least 4 digits long";
     private static final String PHONE_VALIDATION_REGEX = "\\d{4,}";
     private static final String PHONE_VALIDATION_REGEX_ALT = "^\\+(?:[0-9] ?){6,14}[0-9]$";
     public final String value;
     private String countryCode;
-    public static final String defaultCountryCode = "65"; // to be transferred to a separate command
+
 
     /**
      * Validates given phone number.
@@ -37,6 +38,9 @@ public class Phone {
         this.countryCode = trimCode(trimmedPhone);
     }
 
+    /**
+     * Extracts country code from a valid phone number, otherwise returns a default code.
+     */
     public static String trimCode(String trimmedPhone) {
         if (trimmedPhone.matches(PHONE_VALIDATION_REGEX_ALT)) {
             // take pattern: start w/ '+', end with whitespace
@@ -44,7 +48,7 @@ public class Phone {
             Matcher matcher = pattern.matcher(trimmedPhone);
             return matcher.group(1);
         } else {
-            return defaultCountryCode;
+            return DEFAULT_COUNTRY_CODE;
         }
     }
 

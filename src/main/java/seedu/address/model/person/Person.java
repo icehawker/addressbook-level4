@@ -2,6 +2,7 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
+import static seedu.address.model.person.Phone.DEFAULT_COUNTRY_CODE;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.tag.UniqueTagList;
 
@@ -20,6 +22,7 @@ public class Person implements ReadOnlyPerson {
 
     private ObjectProperty<Name> name;
     private ObjectProperty<Phone> phone;
+    private ObjectProperty<Country> country;
     private ObjectProperty<Email> email;
     private ObjectProperty<Address> address;
 
@@ -28,10 +31,23 @@ public class Person implements ReadOnlyPerson {
     /**
      * Every field must be present and not null.
      */
-    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
+    public Person(Name name, Phone phone, Country country, Email email, Address address, Set<Tag> tags) {
         requireAllNonNull(name, phone, email, address, tags);
         this.name = new SimpleObjectProperty<>(name);
         this.phone = new SimpleObjectProperty<>(phone);
+        this.country = new SimpleObjectProperty<>(country);
+        this.email = new SimpleObjectProperty<>(email);
+        this.address = new SimpleObjectProperty<>(address);
+        // protect internal tags from changes in the arg list
+        this.tags = new SimpleObjectProperty<>(new UniqueTagList(tags));
+    }
+
+    public Person(Name name, Phone phone, Email email, Address address, Set<Tag> tags) {
+            requireAllNonNull(name, phone, email, address, tags);
+        this.name = new SimpleObjectProperty<>(name);
+        this.phone = new SimpleObjectProperty<>(phone);
+        // default temporarily in phone
+        this.country = new SimpleObjectProperty<>(new Country(DEFAULT_COUNTRY_CODE));
         this.email = new SimpleObjectProperty<>(email);
         this.address = new SimpleObjectProperty<>(address);
         // protect internal tags from changes in the arg list
@@ -42,7 +58,7 @@ public class Person implements ReadOnlyPerson {
      * Creates a copy of the given ReadOnlyPerson.
      */
     public Person(ReadOnlyPerson source) {
-        this(source.getName(), source.getPhone(), source.getEmail(), source.getAddress(),
+        this(source.getName(), source.getPhone(), source.getCountry(), source.getEmail(), source.getAddress(),
                 source.getTags());
     }
 
@@ -60,6 +76,19 @@ public class Person implements ReadOnlyPerson {
         return name.get();
     }
 
+    public void setCountry(Country country) {
+        this.country.set(requireNonNull(country));
+    }
+
+    @Override
+    public ObjectProperty<Country> countryProperty() {
+        return country;
+    }
+
+    public Country getCountry() {
+        return country.get();
+    }
+
     public void setPhone(Phone phone) {
         this.phone.set(requireNonNull(phone));
     }
@@ -73,6 +102,7 @@ public class Person implements ReadOnlyPerson {
     public Phone getPhone() {
         return phone.get();
     }
+
 
     public void setEmail(Email email) {
         this.email.set(requireNonNull(email));
@@ -132,7 +162,7 @@ public class Person implements ReadOnlyPerson {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(name, phone, email, address, tags);
+        return Objects.hash(name, phone, country, email, address, tags);
     }
 
     @Override

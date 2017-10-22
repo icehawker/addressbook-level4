@@ -16,13 +16,14 @@ public interface ReadOnlyPerson {
     Name getName();
     ObjectProperty<Phone> phoneProperty();
     Phone getPhone();
+    ObjectProperty<Country> countryProperty();
+    Country getCountry();
     ObjectProperty<Email> emailProperty();
     Email getEmail();
     ObjectProperty<Address> addressProperty();
     Address getAddress();
     ObjectProperty<UniqueTagList> tagProperty();
     Set<Tag> getTags();
-    ObjectProperty<Country> countryProperty();
 
     /**
      * Returns true if both have the same state. (interfaces cannot override .equals)
@@ -31,7 +32,7 @@ public interface ReadOnlyPerson {
         return other == this // short circuit if same object
                 || (other != null // this is first to avoid NPE below
                 && other.getName().equals(this.getName()) // state checks here onwards
-                && other.getPhone().equals(this.getPhone())
+                && other.getPhone().equals(this.getPhone()) // same phone implies same country code
                 && other.getEmail().equals(this.getEmail())
                 && other.getAddress().equals(this.getAddress()));
     }
